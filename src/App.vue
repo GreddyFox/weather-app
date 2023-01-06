@@ -1,55 +1,125 @@
 <template>
-  <div><button @click="getWeather">dai pogodu</button></div>
+
+  <div id="app">
+    <main>
+      <div class="search">
+        <input placeholder="Search..." v-model="city">
+      </div>
+
+      <div class="container">
+        <ul>
+          <li>Temperature now: {{ this.weather?.main.temp }}</li>
+          <li>Feels like: {{ this.weather?.main.feels_like }}</li>
+          <li>City: {{ this.weather?.name }}</li>
+        </ul>
+        <button  v-if="this.city !== ''" @click="getWeather(this.city)">dai pogodu</button>
+      </div>
+
+    </main>
+  </div>
 </template>
 
 <script>
 
+import {loadWeather} from "@/api";
 export default {
-  name: 'App',
-  components: {
-  },
+  name: 'app',
   data() {
     return {
-      weater: null
+      city: '',
+      weather: null
     }
   },
+
+
   methods: {
-    async getWeather() {
-      const api_key = 'f4ca3fbb5a33c8e080b9f86a603a5926'
-      const f = await fetch(`http://api.openweathermap.org/data/2.5/forecast?id=524901&appid=${api_key}`);
-      const data = await f.json();
-      console.log(data)
+    // getWeather(cityName) { робит
+    //   setInterval(async () => {
+    //    const w = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${api_key}&units=metric`)
+    //         .then(res => res.json());
+    //    console.log(w);
+    //    this.weather = w
+    //   }, 5000)
+    // }
+
+    getWeather(cityName) {
+      setInterval(async  () => {
+        const w = await loadWeather(cityName);
+        console.log(w);
+        this.weather = w
+      }, 5000)
     }
+
+
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 
-body, html {
-  height: 100%;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  /* The image used */
-  background-image: url('https://images.unsplash.com/photo-1500964757637-c85e8a162699?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhdXRpZnVsJTIwbGFuZHNjYXBlc3xlbnwwfHwwfHw%3D&w=1000&q=80');
+  font-family: Avenir, Helvetica, Arial, sans-serif;
 
-  /* Full height */
-  height: 100%;
-
-  /* Center and scale the image nicely */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
 }
+
+#app {
+  /*-webkit-font-smoothing: antialiased;*/
+  /*-moz-osx-font-smoothing: grayscale;*/
+  /*text-align: center;*/
+  /*color: #2c3e50;*/
+  /*margin-top: 60px;*/
+  background-image: url('./assets/landscape.jpg');
+  background-size: cover;
+  background-position: bottom;
+  transition: 0.4s;
+}
+
+main {
+  min-height: 100vh;
+  padding: 25px;
+
+}
+
+.container {
+  font-size: 24px;
+  width: 350px;
+  height: 200px;
+  text-align: center;
+  margin: auto;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+}
+
+.search {
+  text-align: center;
+  margin: 10px;
+
+}
+
+input {
+  width: 350px;
+  height: 30px;
+  border-radius: 16px;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 20px;
+
+}
+ul {
+  padding: 10px;
+  list-style-type: none;
+}
+
+li {
+  padding: 5px;
+  text-align: left;
+}
+
 
 
 </style>
