@@ -2,9 +2,7 @@
 
   <div id="app">
     <main>
-      <div class="search">
-        <input placeholder="Search..." v-model="city">
-      </div>
+      <searchBar @pickCity="showWeather"/>
 
       <div class="container">
         <ul>
@@ -12,7 +10,7 @@
           <li>Feels like: {{ this.weather?.main.feels_like }}</li>
           <li>City: {{ this.weather?.name }}</li>
         </ul>
-        <button  v-if="this.city !== ''" @click="getWeather(this.city)">dai pogodu</button>
+<!--        <button  v-if="this.city !== ''" @click="getWeather(this.city)">dai pogodu</button>-->
       </div>
 
     </main>
@@ -22,15 +20,16 @@
 <script>
 
 import {loadWeather} from "@/api";
+import SearchBar from "@/components/SearchBar";
 export default {
   name: 'app',
+  components: {SearchBar},
   data() {
     return {
-      city: '',
+     // city: '', //уже не нужно,если реазиловано через отдельный компонент поиска
       weather: null
     }
   },
-
 
   methods: {
     // getWeather(cityName) { робит
@@ -42,14 +41,28 @@ export default {
     //   }, 5000)
     // }
 
-    getWeather(cityName) {
+    // getWeather(cityName) {
+    //   setInterval(async  () => {
+    //     const w = await loadWeather(cityName);
+    //     console.log(w);
+    //     this.weather = w
+    //   }, 5000)
+    // }
+    // getWeather(cityName){
+    //   const w = loadWeather(cityName);
+    //   this.weather = w;
+    // },
+    // showWeather(city) {
+    //   const w = loadWeather(city);
+    //   this.weather = w;
+    // }
+    showWeather(city) {
       setInterval(async  () => {
-        const w = await loadWeather(cityName);
-        console.log(w);
-        this.weather = w
-      }, 5000)
+            const w = await loadWeather(city);
+            console.log(w);
+            this.weather = w
+          }, 5000)
     }
-
 
   }
 }
@@ -96,20 +109,9 @@ main {
   border-radius: 16px;
 }
 
-.search {
-  text-align: center;
-  margin: 10px;
 
-}
 
-input {
-  width: 350px;
-  height: 30px;
-  border-radius: 16px;
-  background-color: rgba(255, 255, 255, 0.5);
-  padding: 20px;
 
-}
 ul {
   padding: 10px;
   list-style-type: none;
